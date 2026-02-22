@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model bank_users {
+  id           String        @id @default(uuid())
+  customerId   String        @unique
+  customerName String
+  phoneNumber  String
+  email        String        @unique
+  password     String
+  balance      Float         @default(0)
+  createdAt    DateTime      @default(now())
+  tokens       bank_tokens[]
+}
+
+model bank_tokens {
+  tokenId    String     @id @default(uuid())
+  tokenValue String     @unique
+  userId     String
+  expiryTime DateTime
+  user       bank_users @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
